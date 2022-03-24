@@ -13,7 +13,7 @@ function AkaResponse(props: Props) {
         {props.short}
       </p>
       <button
-        className="float-right rounded p-2 hover:bg-black hover:bg-opacity-25"
+        className="float-right rounded p-1 hover:bg-black hover:bg-opacity-25"
         onClick={copyToClipboard}
       >
         <span className="font-icon">content_copy</span>

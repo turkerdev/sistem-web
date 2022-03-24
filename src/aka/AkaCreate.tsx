@@ -17,7 +17,7 @@ function AkaCreate(props: Props) {
       ${props.isLoading && "animate-pulse"}
       ${props.hasError && "brightness-50"}`}
     >
-      tiny it!
+      {props.isLoading ? "shrinking!" : "tiny it!"}
     </button>
   );
 }
