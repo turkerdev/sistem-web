@@ -7,6 +7,7 @@ import NotFound from "./views/NotFound";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Aka from "./aka/Aka";
 import AkaRedirect from "./aka/AkaRedirect";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ ReactDOM.render(
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+      <Toaster />
     </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById("root")

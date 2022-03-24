@@ -1,4 +1,6 @@
+import { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 import { akaCreateV1 } from "sistem-shared";
 import { z, ZodFormattedError } from "zod";
@@ -24,7 +26,7 @@ function AkaCreator(props: Props) {
     setCreateError(data);
   }, [createBody]);
 
-  const { mutate, isLoading } = useMutation<TCreateResponse>(
+  const { mutate, isLoading } = useMutation<TCreateResponse, AxiosError>(
     () => fetcher.post("/v1/aka/create", createBody).then((req) => req.data),
     {
       onSuccess: (data) => {
@@ -32,6 +34,13 @@ function AkaCreator(props: Props) {
           ? `http://localhost:3000/aka`
           : `https://aka.turker.dev`;
         props.setShort(`${redirectURL}/${data.short}`);
+      },
+      onError: (error) => {
+        toast(error.message, {
+          position: "bottom-center",
+          duration: 4000,
+          style: { background: "#0F0F0F", color: "#FF0000" },
+        });
       },
     }
   );
@@ -41,6 +50,8 @@ function AkaCreator(props: Props) {
       <AkaInput
         urlChange={(url) => setCreateBody({ target: url })}
         urlError={createError?.target?._errors}
+        hasError={createError !== undefined}
+        mutate={mutate}
       />
       <AkaCreate
         hasError={createError !== undefined}
