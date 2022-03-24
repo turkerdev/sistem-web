@@ -11,7 +11,9 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-query": "3.34.16",
-    "react-router-dom": "6.2.2"
+    "react-router-dom": "6.2.2",
+    "sistem-shared": "git://github.com/turkerdev/sistem-shared.git#pre-v0.0.5",
+    "zod": "3.14.2"
   },
   "devDependencies": {
     "@types/react": "17.0.33",
