@@ -26,6 +26,13 @@ function AkaCreator(props: Props) {
     setCreateError(data);
   }, [createBody]);
 
+  const urlChange = (url: string) => {
+    const startsWithProtocol = ["http://", "https://"].some((protocol) =>
+      url.startsWith(protocol)
+    );
+    setCreateBody({ target: startsWithProtocol ? url : `https://${url}` });
+  };
+
   const { mutate, isLoading } = useMutation<TCreateResponse, AxiosError>(
     () => fetcher.post("/v1/aka/create", createBody).then((req) => req.data),
     {
@@ -48,7 +55,7 @@ function AkaCreator(props: Props) {
   return (
     <div className="p-4 rounded bg-[#313131]">
       <AkaInput
-        urlChange={(url) => setCreateBody({ target: url })}
+        urlChange={urlChange}
         urlError={createError?.target?._errors}
         hasError={createError !== undefined}
         mutate={mutate}
