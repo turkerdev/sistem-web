@@ -3,7 +3,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        icon: ["Material Icons"],
+        icon: ["Material Icons Round"],
       },
     },
   },
