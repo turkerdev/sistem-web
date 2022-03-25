@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 import { akaCreateV1 } from "sistem-shared";
 import { z, ZodFormattedError } from "zod";
-import fetcher from "../fetcher";
+import fetcher, { APIError } from "../fetcher";
 import AkaCreate from "./AkaCreate";
 import AkaInput from "./AkaInput";
 
@@ -33,24 +33,38 @@ function AkaCreator(props: Props) {
     setCreateBody({ target: startsWithProtocol ? url : `https://${url}` });
   };
 
-  const { mutate, isLoading } = useMutation<TCreateResponse, AxiosError>(
-    () => fetcher.post("/v1/aka/create", createBody).then((req) => req.data),
-    {
-      onSuccess: (data) => {
-        const redirectURL = import.meta.env.DEV
-          ? `http://localhost:3000/aka`
-          : `https://aka.turker.dev`;
-        props.setShort(`${redirectURL}/${data.short}`);
-      },
-      onError: (error) => {
-        toast(error.message, {
-          position: "bottom-center",
-          duration: 4000,
-          style: { background: "#0F0F0F", color: "#FF0000" },
+  const { mutate, isLoading } = useMutation<
+    TCreateResponse,
+    AxiosError<APIError>
+  >(() => fetcher.post("/v1/aka/create", createBody).then((req) => req.data), {
+    onSuccess: (data) => {
+      const redirectURL = import.meta.env.DEV
+        ? `http://localhost:3000/aka`
+        : `https://aka.turker.dev`;
+      props.setShort(`${redirectURL}/${data.short}`);
+    },
+    onError: (error) => {
+      const modalErrors = error.response?.data.errors.filter(
+        (error) => error.path === "modal"
+      );
+
+      if (modalErrors) {
+        return modalErrors.forEach((err) => {
+          toast(err.messages.join(), {
+            position: "bottom-center",
+            duration: 4000,
+            style: { background: "#0F0F0F", color: "#FF0000" },
+          });
         });
-      },
-    }
-  );
+      }
+
+      toast(error.message, {
+        position: "bottom-center",
+        duration: 4000,
+        style: { background: "#0F0F0F", color: "#FF0000" },
+      });
+    },
+  });
 
   return (
     <div className="p-4 rounded bg-[#313131]">
